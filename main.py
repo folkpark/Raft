@@ -42,15 +42,34 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 def serverThread():
     context = zmq.Context()
     socket = context.socket(zmq.REP)
-    socket.bind("tcp://*:%s" % port)
+    socket.bind("tcp://%s:%s" % (ip,port))
+    while True:
+        message = socket.recv()
+        pmessage = pickle.loads(message)
+        print("Received request: ", pmessage)
+        time.sleep(1)
 
 def clientThread():
-    return 5
+    context = zmq.Context()
+    print("Starting client thread...")
+    socket = context.socket(zmq.REQ)
+    socket.connect("tcp://%s:%s" % (ip,port))
+
+def send():
+    context = zmq.Context()
+    socket_1 = context.socket(zmq.REQ)
+    ip_c2 = '10.142.0.8'
+    socket_1.connect("tcp://%s:%s" % (ip_c2,port))
+    p = pickle.dumps("Hello Friend")
+
+    socket_1.send(p)
 
 if __name__ == '__main__':
     print("Hello World")
     nodeName = sys.argv[1]
+    threads = []
     print(nodeName)
+    port = 24 #next try 20
 
     ip_dict = {
         's1':'10.142.0.2',
@@ -63,4 +82,15 @@ if __name__ == '__main__':
     }
 
     ip = ip_dict.get(nodeName)
-    
+
+    serverThread = threading.Thread(target=serverThread)
+    threads.append(serverThread)
+    clientThread = threading.Thread(target=clientThread)
+    threads.append(clientThread)
+    serverThread.start()
+    clientThread.start()
+    time.sleep(3) #wait one second for the connections to be made.
+
+    n = input("Enter s to send ")
+    if n is 's':
+        send()
