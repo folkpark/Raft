@@ -42,6 +42,7 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 def serverThread():
     context = zmq.Context()
     socket = context.socket(zmq.REP)
+    print(ip)
     socket.bind("tcp://%s:%s" % (ip,port))
     while True:
         message = socket.recv()
@@ -69,7 +70,7 @@ if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
     print(nodeName)
-    port = 24 #next try 20
+    port = 20 #next try 20
 
     ip_dict = {
         's1':'10.142.0.2',
@@ -89,7 +90,7 @@ if __name__ == '__main__':
     threads.append(clientThread)
     serverThread.start()
     clientThread.start()
-    time.sleep(3) #wait one second for the connections to be made.
+    time.sleep(1) #wait one second for the connections to be made.
 
     n = input("Enter s to send ")
     if n is 's':
