@@ -43,7 +43,7 @@ def serverThread():
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     print(ip)
-    socket.bind("tcp://%s:%s" % (ip,port))
+    socket.bind("tcp://*:%s" % (port))
     while True:
         message = socket.recv()
         pmessage = pickle.loads(message)
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
     print(nodeName)
-    port = 20 #next try 20
+    port = 5050 #next try 20
 
     ip_dict = {
         's1':'10.142.0.2',
