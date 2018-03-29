@@ -48,6 +48,7 @@ def serverThread():
         message = socket.recv()
         pmessage = pickle.loads(message)
         print("Received request: ", pmessage)
+        socket.send_string("Gotcha")
         time.sleep(1)
 
 def clientThread():
