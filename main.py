@@ -48,15 +48,15 @@ def serverThread():
         message = socket.recv()
         pmessage = pickle.loads(message)
         print("Received request: ", pmessage)
-        socket.send_string("Gotcha")
-        send(ip_dict.get('c1'), "Gotcha")
+        socket.send_string("ACK")
+        #send(ip_dict.get('c1'), "Gotcha")
         time.sleep(1)
 
 def clientThread():
     context = zmq.Context()
     print("Starting client thread...")
     socket = context.socket(zmq.REQ)
-    socket.connect("tcp://%s:%s" % (ip,port))
+    socket.connect("tcp://%s:%s" % (ip,port2))
 
 def send(ip_in, str):
     context = zmq.Context()
@@ -70,7 +70,8 @@ if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
     print(nodeName)
-    port = 5050 #next try 20
+    port = 5050
+    port2 = 5051
 
     ip_dict = {
         's1':'10.142.0.2',
