@@ -48,7 +48,7 @@ def serverThread():
         message = socket.recv()
         pmessage = pickle.loads(message)
         print("Received request: ", pmessage)
-        #socket.send_string("Gotcha")
+        socket.send_string("Gotcha")
         send(ip_dict.get('c1'), "Gotcha")
         time.sleep(1)
 
