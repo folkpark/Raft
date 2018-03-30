@@ -69,7 +69,7 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 
 def serverThread():
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serversocket.bind((socket.gethostname(), port))
+    serversocket.bind(('localhost', port))
     serversocket.listen(7)  # become a server socket, maximum 7 connections
     while True:
         clientsocket, addr = serversocket.accept()
