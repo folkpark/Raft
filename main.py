@@ -43,7 +43,7 @@ def serverThread():
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     print(ip)
-    socket.bind("tcp://*:%s" % (port))
+    socket.bind("tcp://*:%s" % (port2))
     while True:
         message = socket.recv()
         pmessage = pickle.loads(message)
@@ -56,7 +56,7 @@ def clientThread():
     context = zmq.Context()
     print("Starting client thread...")
     socket = context.socket(zmq.REQ)
-    socket.connect("tcp://%s:%s" % (ip,port2))
+    socket.connect("tcp://%s:%s" % (ip,port))
 
 def send(ip_in, str):
     context = zmq.Context()
