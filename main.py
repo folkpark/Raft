@@ -70,7 +70,7 @@ if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
     print(nodeName)
-    port = 5050
+    port = 5053
     port2 = 5051
 
     ip_dict = {
