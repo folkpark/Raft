@@ -93,6 +93,7 @@ if __name__ == '__main__':
     clientThread.start()
     time.sleep(1) #wait one second for the connections to be made.
 
-    n = input("Enter s to send ")
-    if n is 's':
-        send(ip_dict.get('c2'), "Hello Friend")
+    while True:
+        n = input("Enter s to send ")
+        if n is 's':
+            send(ip_dict.get('c2'), "Hello Friend")
