@@ -49,7 +49,7 @@ def serverThread():
         pmessage = pickle.loads(message)
         print("Received request: ", pmessage)
         socket.send_string("ACK")
-        #send(ip_dict.get('c1'), "Gotcha")
+        send(ip_dict.get('c1'), "Gotcha")
         time.sleep(1)
 
 def clientThread():
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
     print(nodeName)
-    port = 5053
+    port = 5050
     port2 = 5051
 
     ip_dict = {
