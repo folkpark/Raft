@@ -81,7 +81,7 @@ def serverThread():
 
 def clientThread():
     clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    clientSocket.connect((ip_dict.get('c2'), port))
+    clientSocket.connect(('10.142.0.8', port))
     tm = clientSocket.recv(1024)
     clientSocket.close()
     print("The time got from the server is %s" % tm.decode('ascii'))
@@ -116,5 +116,5 @@ if __name__ == '__main__':
 
     while True:
         n = input("Enter s to send ")
-        if n is 's':
-            send(ip_dict.get('c2'), "Hello Friend")
+        #if n is 's':
+            #send(ip_dict.get('c2'), "Hello Friend")
