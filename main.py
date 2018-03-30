@@ -48,7 +48,8 @@ def serverThread():
         message = socket.recv()
         pmessage = pickle.loads(message)
         print("Received request: ", pmessage)
-        socket.send_string("Gotcha")
+        #socket.send_string("Gotcha")
+        send(ip_dict.get('c1'), "Gotcha")
         time.sleep(1)
 
 def clientThread():
@@ -57,13 +58,11 @@ def clientThread():
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://%s:%s" % (ip,port))
 
-def send():
+def send(ip_in, str):
     context = zmq.Context()
     socket_1 = context.socket(zmq.REQ)
-    ip_c2 = '10.142.0.8'
-    socket_1.connect("tcp://%s:%s" % (ip_c2,port))
-    p = pickle.dumps("Hello Friend")
-
+    socket_1.connect("tcp://%s:%s" % (ip_in,port))
+    p = pickle.dumps(str)
     socket_1.send(p)
 
 if __name__ == '__main__':
@@ -95,4 +94,4 @@ if __name__ == '__main__':
 
     n = input("Enter s to send ")
     if n is 's':
-        send()
+        send(ip_dict.get('c2'), "Hello Friend")
