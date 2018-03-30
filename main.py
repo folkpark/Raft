@@ -11,10 +11,10 @@ https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/storage/c
 
 '''
 
-#import zmq
+import zmq
 import pickle
 import threading
-import socket
+
 import time
 import sys
 #from google.cloud import storage
@@ -40,51 +40,32 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
         destination_blob_name))
 '''
 
-# def serverThread():
-#     context = zmq.Context()
-#     socket = context.socket(zmq.REP)
-#     print(ip)
-#     socket.bind("tcp://*:%s" % (port2))
-#     while True:
-#         message = socket.recv()
-#         pmessage = pickle.loads(message)
-#         print("Received request: ", pmessage)
-#         socket.send_string("ACK")
-#         #send(ip_dict.get('c1'), "Gotcha")
-#         time.sleep(1)
-
-# def clientThread():
-#     context = zmq.Context()
-#     print("Starting client thread...")
-#     socket = context.socket(zmq.REQ)
-#     socket.connect("tcp://%s:%s" % (ip,port))
-
-# def send(ip_in, str):
-#     context = zmq.Context()
-#     socket_1 = context.socket(zmq.REQ)
-#     socket_1.connect("tcp://%s:%s" % (ip_in,port))
-#     p = pickle.dumps(str)
-#     socket_1.send(p)
-
-
 def serverThread():
-    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serversocket.bind(('localhost', port))
-    serversocket.listen(7)  # become a server socket, maximum 7 connections
+    context = zmq.Context()
+    socket = context.socket(zmq.PAIR)
+    print(ip)
+    socket.bind("tcp://*:%s" % (port))
     while True:
-        clientsocket, addr = serversocket.accept()
-
-        print("Got a connection from %s" % str(addr))
-        currentTime = time.ctime(time.time()) + "\r\n"
-        clientsocket.send(currentTime.encode('ascii'))
-        clientsocket.close()
+        message = socket.recv()
+        pmessage = pickle.loads(message)
+        print("Received request: ", pmessage)
+        socket.send_string("ACK")
+        #send(ip_dict.get('c1'), "Gotcha")
+        time.sleep(1)
 
 def clientThread():
-    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    clientSocket.connect(('10.142.0.8', port))
-    tm = clientSocket.recv(1024)
-    clientSocket.close()
-    print("The time got from the server is %s" % tm.decode('ascii'))
+    context = zmq.Context()
+    print("Starting client thread...")
+    socket = context.socket(zmq.PAIR)
+    socket.connect("tcp://%s:%s" % (ip,port))
+
+def send(ip_in, str):
+    context = zmq.Context()
+    socket_1 = context.socket(zmq.REQ)
+    socket_1.connect("tcp://%s:%s" % (ip_in,port))
+    p = pickle.dumps(str)
+    socket_1.send(p)
+
 
 if __name__ == '__main__':
     print("Hello World")
@@ -92,7 +73,7 @@ if __name__ == '__main__':
     threads = []
     print(nodeName)
     port = 5050
-    #port2 = 5051
+    port2 = 5051
 
     ip_dict = {
         's1':'10.142.0.2',
@@ -117,4 +98,3 @@ if __name__ == '__main__':
     while True:
         n = input("Enter s to send ")
         #if n is 's':
-            #send(ip_dict.get('c2'), "Hello Friend")

@@ -1,9 +1,15 @@
+import zmq
+import random
+import sys
+import time
 
-class Server:
-    nodeName = ''
+port = "5050"
+context = zmq.Context()
+socket = context.socket(zmq.PAIR)
+socket.bind("tcp://10.142.0.7:%s" % port)
 
-    def __init__(self, nodeName):
-        self.nodeName = nodeName
-
-    def startServerThread(self):
-        return 5
+while True:
+    socket.send("Server message to client3")
+    msg = socket.recv()
+    print(msg)
+    time.sleep(1)
