@@ -49,27 +49,27 @@ def serverThread():
     socket2 = context.socket(zmq.PAIR)
     socket3 = context.socket(zmq.PAIR)
     socket4 = context.socket(zmq.PAIR)
-    if nodeName is 's1':
+    if nodeName == 's1':
         socket1.bind("tcp://10.142.0.2:%s" % port_List[0])
         socket2.bind("tcp://10.142.0.2:%s" % port_List[1])
         socket3.bind("tcp://10.142.0.2:%s" % port_List[2])
         socket4.bind("tcp://10.142.0.2:%s" % port_List[3])
-    elif nodeName is 's2':
+    elif nodeName == 's2':
         socket1.bind("tcp://10.142.0.3:%s" % port_List[0])
         socket2.bind("tcp://10.142.0.3:%s" % port_List[4])
         socket3.bind("tcp://10.142.0.3:%s" % port_List[5])
         socket4.bind("tcp://10.142.0.3:%s" % port_List[6])
-    elif nodeName is 's3':
+    elif nodeName == 's3':
         socket1.bind("tcp://10.142.0.4:%s" % port_List[1])
         socket2.bind("tcp://10.142.0.4:%s" % port_List[4])
         socket3.bind("tcp://10.142.0.4:%s" % port_List[7])
         socket4.bind("tcp://10.142.0.4:%s" % port_List[8])
-    elif nodeName is 's4':
+    elif nodeName == 's4':
         socket1.bind("tcp://10.142.0.5:%s" % port_List[2])
         socket2.bind("tcp://10.142.0.5:%s" % port_List[5])
         socket3.bind("tcp://10.142.0.5:%s" % port_List[7])
         socket4.bind("tcp://10.142.0.5:%s" % port_List[9])
-    elif nodeName is 's5':
+    elif nodeName == 's5':
         socket1.bind("tcp://10.142.0.6:%s" % port_List[3])
         socket2.bind("tcp://10.142.0.6:%s" % port_List[6])
         socket3.bind("tcp://10.142.0.6:%s" % port_List[8])
@@ -130,7 +130,7 @@ if __name__ == '__main__':
             "5005","5006","5007","5008","5009",]
 
     port_dict = {}
-    if nodeName is "s1":
+    if nodeName == "s1":
         print("PORT_DICT S1 IF STATEMENT")
         port_dict = {
             's2':"5000",
@@ -138,28 +138,28 @@ if __name__ == '__main__':
             's4': "5002",
             's5': "5003"
         }
-    elif nodeName is 's2':
+    elif nodeName == 's2':
         port_dict = {
             's1':"5000",
             's3': "5004",
             's4': "5005",
             's5': "5006"
         }
-    elif nodeName is 's3':
+    elif nodeName == 's3':
         port_dict = {
             's1':"5001",
             's2': "5004",
             's4': "5007",
             's5': "5008"
         }
-    elif nodeName is 's4':
+    elif nodeName == 's4':
         port_dict = {
             's1':"5002",
             's2': "5005",
             's3': "5007",
             's5': "5009"
         }
-    elif nodeName is 's5':
+    elif nodeName == 's5':
         port_dict = {
             's1':"5003",
             's2': "5006",
