@@ -14,17 +14,17 @@ https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/storage/c
 import zmq
 import pickle
 import threading
-
 import time
 import sys
 #from google.cloud import storage
 
 global ip
 global port
-global nodeName
+global nodeName #My nodename
+global leader #String value of who the leader is
 global role
-global leader_ip
-global leader_port
+# global leader_ip
+# global leader_port
 
 
 # This function is a code same on how to upload a file to
@@ -88,33 +88,81 @@ def serverThread():
 
 
 def clientThread():
-    port = port_dict.get('s1')
-    print("Port: %s" % port)
-    print(port_dict)
+    # port = port_dict.get('s1')
+    # print("Port: %s" % port)
+    # print(port_dict)
+    # context = zmq.Context()
+    # socket = context.socket(zmq.PAIR)
+    # socket.connect("tcp://10.142.0.2:%s" % port)
+
+    #Connect to all other nodes, but only send msg's to LEADER
     context = zmq.Context()
-    socket = context.socket(zmq.PAIR)
-    socket.connect("tcp://10.142.0.2:%s" % port)
+    socket1 = context.socket(zmq.PAIR)
+    socket2 = context.socket(zmq.PAIR)
+    socket3 = context.socket(zmq.PAIR)
+    socket4 = context.socket(zmq.PAIR)
+    count = 0
+    connections = []
+    for key in port_dict:
+        tempIP = ip_dict.get(key)
+        tempPort = ip_dict.get(key)
+        if count is 0:
+            socket1.connect("tcp://%s:%s" % (tempIP,tempPort))
+            connections.append((key, 1))
+        elif count is 1:
+            socket2.connect("tcp://%s:%s" % (tempIP, tempPort))
+            connections.append((key, 2))
+        elif count is 2:
+            socket3.connect("tcp://%s:%s" % (tempIP, tempPort))
+            connections.append((key, 3))
+        elif count is 3:
+            socket4.connect("tcp://%s:%s" % (tempIP, tempPort))
+            connections.append((key, 4))
+        count += 1
+
+    if leader == None:
+        election()
+
+    for conn in connections:
+        if conn[0] == leader:
+            if conn[1] == 1:
+                socket_L = socket1
+            elif conn[1] == 2:
+                socket_L = socket2
+            elif conn[1] == 3:
+                socket_L = socket3
+            elif conn[1] == 4:
+                socket_L = socket4
 
     while True:
-        msg = socket.recv()
+        msg = socket_L.recv()
         pmessage = pickle.loads(msg)
         print(pmessage)
         p = pickle.dumps("client message to LEADER")
-        socket.send(p)
+        socket_L.send(p)
         time.sleep(1)
 
-# def send(ip_in, str):
-#     context = zmq.Context()
-#     socket_1 = context.socket(zmq.REQ)
-#     socket_1.connect("tcp://%s:%s" % (ip_in,port))
-#     p = pickle.dumps(str)
-#     socket_1.send(p)
+# leader must not be None at the end of this function
+def election():
+    leader = 's2'
 
+    #Loop with random timer
+    #If no candidate messages received, then send out
+    #request for votes. Vote for self. If votes is 3 or
+    #greater than send out a victory message.
+
+    if nodeName == leader:
+        role = "leader"
+    else:
+        role = "follower"
 
 if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
+    role = "Follower"
+    leader = None
     print("My name is: " + nodeName)
+    print("My role is: " + role)
 
     ip_dict = {
         's1':'10.142.0.2',
@@ -125,13 +173,10 @@ if __name__ == '__main__':
         'c1':'10.142.0.7',
         'c2':'10.142.0.8'
     }
-
     port_List = ["5000","5001","5002","5003","5004",
             "5005","5006","5007","5008","5009",]
-
     port_dict = {}
     if nodeName == "s1":
-        print("PORT_DICT S1 IF STATEMENT")
         port_dict = {
             's2':"5000",
             's3': "5001",
@@ -168,12 +213,12 @@ if __name__ == '__main__':
         }
 
     ip = ip_dict.get(nodeName)
-    leader_ip = ip_dict.get('s1')
-    leader_port = port_dict.get('s1')
-    print("Leader Port: %s" % leader_port)
-    print("Leader IP: %s " % leader_ip)
+    # leader_ip = ip_dict.get('s1')
+    # leader_port = port_dict.get('s1')
+    # print("Leader Port: %s" % leader_port)
+    # print("Leader IP: %s " % leader_ip)
 
-    time.sleep(4)
+    time.sleep(3)
     print("Starting server thread...")
     serverThread = threading.Thread(target=serverThread)
     threads.append(serverThread)
