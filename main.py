@@ -21,7 +21,7 @@ import sys
 global ip
 global port
 global nodeName #My nodename
-global leader #String value of who the leader is
+# global leader #String value of who the leader is
 global role
 # global leader_ip
 # global leader_port
@@ -125,10 +125,13 @@ def clientThread():
             socket_List.append(socket4)
         count += 1
 
-    if leader == None:
-        election()
-
     print("Leader is: %s" % leader)
+    newLeader = ''
+    if leader == None:
+        newLeader = election()
+
+
+    print("New Leader is: %s" % newLeader)
 
     leaderIndex = -1
     for conn in connections:
@@ -167,6 +170,8 @@ def election():
         role = "leader"
     else:
         role = "follower"
+
+    return leader
 
 if __name__ == '__main__':
     nodeName = sys.argv[1]
