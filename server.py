@@ -13,5 +13,6 @@ while True:
     p = pickle.dumps("Server message to client3")
     socket.send(p)
     msg = socket.recv()
-    print(msg)
+    pmessage = pickle.loads(msg)
+    print(pmessage)
     time.sleep(1)
