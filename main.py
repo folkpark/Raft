@@ -44,55 +44,35 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 '''
 
 def serverThread():
+    context = zmq.Context()
+    socket1 = context.socket(zmq.PAIR)
+    socket2 = context.socket(zmq.PAIR)
+    socket3 = context.socket(zmq.PAIR)
+    socket4 = context.socket(zmq.PAIR)
     if nodeName is 's1':
-        context = zmq.Context()
-        socket1 = context.socket(zmq.PAIR)
         socket1.bind("tcp://10.142.0.2:%s" % port_List[0])
-        socket2 = context.socket(zmq.PAIR)
         socket2.bind("tcp://10.142.0.2:%s" % port_List[1])
-        socket3 = context.socket(zmq.PAIR)
         socket3.bind("tcp://10.142.0.2:%s" % port_List[2])
-        socket4 = context.socket(zmq.PAIR)
         socket4.bind("tcp://10.142.0.2:%s" % port_List[3])
     elif nodeName is 's2':
-        context = zmq.Context()
-        socket1 = context.socket(zmq.PAIR)
         socket1.bind("tcp://10.142.0.3:%s" % port_List[0])
-        socket2 = context.socket(zmq.PAIR)
         socket2.bind("tcp://10.142.0.3:%s" % port_List[4])
-        socket3 = context.socket(zmq.PAIR)
         socket3.bind("tcp://10.142.0.3:%s" % port_List[5])
-        socket4 = context.socket(zmq.PAIR)
         socket4.bind("tcp://10.142.0.3:%s" % port_List[6])
     elif nodeName is 's3':
-        context = zmq.Context()
-        socket1 = context.socket(zmq.PAIR)
         socket1.bind("tcp://10.142.0.4:%s" % port_List[1])
-        socket2 = context.socket(zmq.PAIR)
         socket2.bind("tcp://10.142.0.4:%s" % port_List[4])
-        socket3 = context.socket(zmq.PAIR)
         socket3.bind("tcp://10.142.0.4:%s" % port_List[7])
-        socket4 = context.socket(zmq.PAIR)
         socket4.bind("tcp://10.142.0.4:%s" % port_List[8])
     elif nodeName is 's4':
-        context = zmq.Context()
-        socket1 = context.socket(zmq.PAIR)
         socket1.bind("tcp://10.142.0.5:%s" % port_List[2])
-        socket2 = context.socket(zmq.PAIR)
         socket2.bind("tcp://10.142.0.5:%s" % port_List[5])
-        socket3 = context.socket(zmq.PAIR)
         socket3.bind("tcp://10.142.0.5:%s" % port_List[7])
-        socket4 = context.socket(zmq.PAIR)
         socket4.bind("tcp://10.142.0.5:%s" % port_List[9])
     elif nodeName is 's5':
-        context = zmq.Context()
-        socket1 = context.socket(zmq.PAIR)
         socket1.bind("tcp://10.142.0.6:%s" % port_List[3])
-        socket2 = context.socket(zmq.PAIR)
         socket2.bind("tcp://10.142.0.6:%s" % port_List[6])
-        socket3 = context.socket(zmq.PAIR)
         socket3.bind("tcp://10.142.0.6:%s" % port_List[8])
-        socket4 = context.socket(zmq.PAIR)
         socket4.bind("tcp://10.142.0.6:%s" % port_List[9])
     while True:
         p = pickle.dumps("Server message to client")
@@ -130,7 +110,6 @@ def clientThread():
 
 
 if __name__ == '__main__':
-    print("Hello World")
     nodeName = sys.argv[1]
     threads = []
     print(nodeName)
