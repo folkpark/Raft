@@ -25,6 +25,7 @@ global nodeName
 global role
 global leader_ip
 global leader_port
+global port_dict
 
 
 # This function is a code same on how to upload a file to
