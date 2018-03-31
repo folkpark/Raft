@@ -90,6 +90,7 @@ def serverThread():
 def clientThread():
     port = port_dict.get('s1')
     print("Port: %s" % port)
+    print(port_dict)
     context = zmq.Context()
     socket = context.socket(zmq.PAIR)
     socket.connect("tcp://10.142.0.2:%s" % port)
