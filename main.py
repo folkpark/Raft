@@ -25,7 +25,6 @@ global nodeName
 global role
 global leader_ip
 global leader_port
-global port_dict
 
 
 # This function is a code same on how to upload a file to
@@ -168,8 +167,10 @@ if __name__ == '__main__':
         }
 
     ip = ip_dict.get(nodeName)
-    # leader_ip = ip_dict.get('s1')
-    # leader_port = port_dict.get('s1')
+    leader_ip = ip_dict.get('s1')
+    leader_port = port_dict.get('s1')
+    print("Leader Port: %s" % leader_port)
+    print("Leader IP: %s " % leader_ip)
 
     time.sleep(4)
     print("Starting server thread...")
