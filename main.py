@@ -89,9 +89,10 @@ def serverThread():
 
 def clientThread():
     port = port_dict.get('s1')
+    port_int = int(port)
     context = zmq.Context()
     socket = context.socket(zmq.PAIR)
-    socket.connect("tcp://10.142.0.2:%s" % port)
+    socket.connect("tcp://10.142.0.2:%s" % port_int)
 
     while True:
         msg = socket.recv()
@@ -168,6 +169,7 @@ if __name__ == '__main__':
     # leader_ip = ip_dict.get('s1')
     # leader_port = port_dict.get('s1')
 
+    time.sleep(4)
     print("Starting server thread...")
     serverThread = threading.Thread(target=serverThread)
     threads.append(serverThread)
