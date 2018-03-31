@@ -101,6 +101,7 @@ def clientThread():
     socket2 = context.socket(zmq.PAIR)
     socket3 = context.socket(zmq.PAIR)
     socket4 = context.socket(zmq.PAIR)
+    socket_L = context.socket(zmq.PAIR)
     count = 0
     connections = []
     for key in port_dict:
