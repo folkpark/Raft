@@ -10,11 +10,9 @@ socket = context.socket(zmq.PAIR)
 socket.connect("tcp://10.142.0.4:%s" % port)
 
 while True:
-    p = pickle.dumps("client message to server1")
-    p2 = pickle.dumps("client message to server2")
+    p = pickle.dumps("client message to LEADER")
     msg = socket.recv()
     pmessage = pickle.loads(msg)
     print(pmessage)
     socket.send(p)
-    socket.send(p2)
     time.sleep(1)
