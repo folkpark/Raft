@@ -21,7 +21,6 @@ import sys
 global ip
 global port
 global nodeName #My nodename
-# global leader #String value of who the leader is
 global role
 # global leader_ip
 # global leader_port
@@ -126,12 +125,10 @@ def clientThread():
         count += 1
 
     print("Leader is: %s" % leader)
-    newLeader = ''
     if leader == None:
-        newLeader = election()
-
-
-    print("New Leader is: %s" % newLeader)
+        election()
+        
+    print("New Leader is: %s" % leader)
 
     leaderIndex = -1
     for conn in connections:
@@ -177,9 +174,10 @@ if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
     role = "Follower"
-    leader = None
+    global leader  # String value of who the leader is
     print("My name is: " + nodeName)
     print("My role is: " + role)
+    leader = None
 
     ip_dict = {
         's1':'10.142.0.2',
