@@ -127,7 +127,7 @@ def clientThread():
     print("Leader is: %s" % leader)
     if leader == None:
         election()
-        
+
     print("New Leader is: %s" % leader)
 
     leaderIndex = -1
@@ -156,6 +156,7 @@ def clientThread():
 
 # leader must not be None at the end of this function
 def election():
+    global leader
     leader = 's2'
 
     #Loop with random timer
