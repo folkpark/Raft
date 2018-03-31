@@ -4,7 +4,7 @@ import random
 import sys
 import time
 
-port = "5060"
+port = "5000"
 context = zmq.Context()
 socket = context.socket(zmq.PAIR)
 socket.connect("tcp://10.142.0.3:%s" % port)
