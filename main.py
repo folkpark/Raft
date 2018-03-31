@@ -112,7 +112,7 @@ def clientThread():
 if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
-    print(nodeName)
+    print("My name is: " + nodeName)
 
     ip_dict = {
         's1':'10.142.0.2',
@@ -130,38 +130,38 @@ if __name__ == '__main__':
     port_dict = {}
     if nodeName is 's1':
         port_dict = {
-            's2':'5000',
-            's3': '5001',
-            's4': '5002',
-            's5': '5003'
+            's2':"5000",
+            's3': "5001",
+            's4': "5002",
+            's5': "5003"
         }
     elif nodeName is 's2':
         port_dict = {
-            's1':'5000',
-            's3': '5004',
-            's4': '5005',
-            's5': '5006'
+            's1':"5000",
+            's3': "5004",
+            's4': "5005",
+            's5': "5006"
         }
     elif nodeName is 's3':
         port_dict = {
-            's1':'5001',
-            's2': '5004',
-            's4': '5007',
-            's5': '5008'
+            's1':"5001",
+            's2': "5004",
+            's4': "5007",
+            's5': "5008"
         }
     elif nodeName is 's4':
         port_dict = {
-            's1':'5002',
-            's2': '5005',
-            's3': '5007',
-            's5': '5009'
+            's1':"5002",
+            's2': "5005",
+            's3': "5007",
+            's5': "5009"
         }
     elif nodeName is 's5':
         port_dict = {
-            's1':'5003',
-            's2': '5006',
-            's3': '5008',
-            's4': '5009'
+            's1':"5003",
+            's2': "5006",
+            's3': "5008",
+            's4': "5009"
         }
 
     ip = ip_dict.get(nodeName)
