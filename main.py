@@ -95,6 +95,7 @@ if __name__ == '__main__':
     clientThread.start()
     time.sleep(1) #wait one second for the connections to be made.
 
+
     while True:
         n = input("Enter s to send ")
         #if n is 's':
