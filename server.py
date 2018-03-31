@@ -1,4 +1,5 @@
 import zmq
+import pickle
 import random
 import sys
 import time
@@ -9,7 +10,8 @@ socket = context.socket(zmq.PAIR)
 socket.bind("tcp://10.142.0.8:%s" % port)
 
 while True:
-    socket.send_string("Server message to client3")
+    p = pickle.dumps("Server message to client3")
+    socket.send(p)
     msg = socket.recv()
     print(msg)
     time.sleep(1)

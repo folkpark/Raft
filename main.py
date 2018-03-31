@@ -55,6 +55,7 @@ def serverThread():
 
 def clientThread():
     context = zmq.Context()
+    socket = context.socket(zmq.PAIR)
     print("Starting client thread...")
     socket = context.socket(zmq.PAIR)
     socket.connect("tcp://%s:%s" % (ip,port))
