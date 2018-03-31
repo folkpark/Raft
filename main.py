@@ -22,6 +22,7 @@ global ip
 global port
 global nodeName #My nodename
 global role
+global leader
 # global leader_ip
 # global leader_port
 
@@ -74,6 +75,7 @@ def serverThread():
         socket3.bind("tcp://10.142.0.6:%s" % port_List[8])
         socket4.bind("tcp://10.142.0.6:%s" % port_List[9])
     while True:
+        print("Inside Server Thread Loop")
         p = pickle.dumps("Server message to client")
         socket1.send(p)
         socket2.send(p)
@@ -148,6 +150,7 @@ def clientThread():
 
     while True:
         msg = socket_List[leaderIndex].recv()
+        print("Inside CLient Thread Loop")
         pmessage = pickle.loads(msg)
         print(pmessage)
         p = pickle.dumps("client message to LEADER")
