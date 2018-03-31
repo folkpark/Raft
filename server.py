@@ -6,7 +6,7 @@ import time
 port = "5050"
 context = zmq.Context()
 socket = context.socket(zmq.PAIR)
-socket.bind("tcp://*:%s" % port)
+socket.bind("tcp://10.142.0.8:%s" % port)
 
 while True:
     socket.send_string("Server message to client3")
