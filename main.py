@@ -130,7 +130,7 @@ if __name__ == '__main__':
             "5005","5006","5007","5008","5009",]
 
     port_dict = {}
-    if nodeName is 's1':
+    if nodeName is "s1":
         print("PORT_DICT S1 IF STATEMENT")
         port_dict = {
             's2':"5000",
