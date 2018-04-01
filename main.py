@@ -15,6 +15,7 @@ import zmq
 import pickle
 import threading
 import time
+import select
 import sys
 import random
 #from google.cloud import storage
@@ -155,6 +156,10 @@ def election():
             socket_List.append(socket4)
         count += 1
 
+    socket1.setblocking(0)
+    socket2.setblocking(0)
+    socket3.setblocking(0)
+    socket4.setblocking(0)
 
     #Loop with random timer
     #If no candidate messages received, then send out
@@ -222,19 +227,21 @@ def election():
             leader = None
 
             print("about to enter msg line")
-            msg = socket1.poll(timeout=0.1)
-            print("Made it past the msg line")
-            pmessage = pickle.loads(msg)
-            print("pmessage is %s " % (pmessage))
-            if pmessage != None:
-                a,b = pmessage.split("_")
-                if a == "victory": #another leader was declared
-                    leader = b
-                    break
-                elif a == "vote" and voted == False: #give the candidate your vote
-                    p = pickle.dumps("vote")
-                    socket1.send(p)
-                    voted = True
+            ready = select.select([socket1], [], [], 0.05)
+            if ready[0]:
+                msg = socket1.recv()
+                print("Made it past the msg line")
+                pmessage = pickle.loads(msg)
+                print("pmessage is %s " % (pmessage))
+                if pmessage != None:
+                    a,b = pmessage.split("_")
+                    if a == "victory": #another leader was declared
+                        leader = b
+                        break
+                    elif a == "vote" and voted == False: #give the candidate your vote
+                        p = pickle.dumps("vote")
+                        socket1.send(p)
+                        voted = True
 
             msg = socket2.recv()
             pmessage = pickle.loads(msg)
