@@ -220,23 +220,18 @@ def election():
             print(".", end='', flush=True)
             leader = None
 
-            campaignMessage = "vote_%s" % (nodeName)
-            p = pickle.dumps(campaignMessage)
-            socket1.send(p)
-            socket2.send(p)
-            socket3.send(p)
-            socket4.send(p)
-
             msg = socket1.recv()
             pmessage = pickle.loads(msg)
-            a,b = pmessage.split("_")
-            if a == "victory": #another leader was declared
-                leader = b
-                break
-            elif a == "vote" and voted == False: #give the candidate your vote
-                p = pickle.dumps("vote")
-                socket1.send(p)
-                voted = True
+            print("pmessage is %s " % (pmessage))
+            if pmessage != None:
+                a,b = pmessage.split("_")
+                if a == "victory": #another leader was declared
+                    leader = b
+                    break
+                elif a == "vote" and voted == False: #give the candidate your vote
+                    p = pickle.dumps("vote")
+                    socket1.send(p)
+                    voted = True
 
             msg = socket2.recv()
             pmessage = pickle.loads(msg)
