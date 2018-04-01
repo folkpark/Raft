@@ -282,6 +282,7 @@ def election():
             #     socket4.send(p)
             #     voted = True
 
+    time.sleep(4)
     socket_Leader = context.socket(zmq.PAIR)
     port = port_dict.get(leader)
     ip = ip_dict.get(leader)
