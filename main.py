@@ -75,7 +75,7 @@ def serverThread():
         socket3.bind("tcp://10.142.0.6:%s" % port_List[8])
         socket4.bind("tcp://10.142.0.6:%s" % port_List[9])
     while True:
-        print("Inside Server Thread Loop")
+        # print("Inside Server Thread Loop")
         p = pickle.dumps("Server message to client")
         socket1.send(p)
         socket2.send(p)
@@ -85,17 +85,17 @@ def serverThread():
         pmessage = pickle.loads(message)
         print("Received: ", pmessage)
 
-        # message = socket2.recv()
-        # pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
-        #
-        # message = socket3.recv()
-        # pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
-        #
-        # message = socket4.recv()
-        # pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
+        message = socket2.recv()
+        pmessage = pickle.loads(message)
+        print("Received: ", pmessage)
+
+        message = socket3.recv()
+        pmessage = pickle.loads(message)
+        print("Received: ", pmessage)
+
+        message = socket4.recv()
+        pmessage = pickle.loads(message)
+        print("Received: ", pmessage)
 
         #send(ip_dict.get('c1'), "Gotcha")
         time.sleep(1)
@@ -163,10 +163,10 @@ def clientThread():
 
     while True:
         msg = socket.recv()
-        print("Inside CLient Thread Loop")
+        # print("Inside CLient Thread Loop")
         pmessage = pickle.loads(msg)
         print(pmessage)
-        p = pickle.dumps("client message to LEADER")
+        p = pickle.dumps(nodeName + " message to LEADER")
         socket.send(p)
         time.sleep(1)
 
