@@ -190,6 +190,7 @@ def election():
             print("I haved timed Out!")
             role = "candidate"
             leader = winner
+            break
             # print("Asking for votes...")
             # # ASK for votes
             # campaignMessage = "vote_%s" % (nodeName)
