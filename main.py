@@ -222,7 +222,7 @@ def election():
             leader = None
 
             print("about to enter msg line")
-            msg = socket1.recv(1024, socket1.MSG_DONTWAIT)
+            msg = socket1.recv(flags=zmq.NOBLOCK)
             print("Made it past the msg line")
             pmessage = pickle.loads(msg)
             print("pmessage is %s " % (pmessage))
