@@ -223,7 +223,7 @@ def election():
             leader = None
 
             print("about to enter msg line")
-            ready = select.select([socket1], [], [], 0.05)
+            ready = select.select([socket1], [], [], 5)
             print("made it past the ready")
             if ready[0]:
                 msg = socket1.recv()
