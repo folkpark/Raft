@@ -156,10 +156,6 @@ def election():
             socket_List.append(socket4)
         count += 1
 
-    socket1.settimeout(0.05)
-    socket2.settimeout(0.05)
-    socket3.settimeout(0.05)
-    socket4.settimeout(0.05)
 
     #Loop with random timer
     #If no candidate messages received, then send out
@@ -228,6 +224,7 @@ def election():
 
             print("about to enter msg line")
             ready = select.select([socket1], [], [], 0.05)
+            print("made it past the ready")
             if ready[0]:
                 msg = socket1.recv()
                 print("Made it past the msg line")
