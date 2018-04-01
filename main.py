@@ -177,8 +177,8 @@ def election():
 
     context = zmq.Context()
     socket_Leader = context.socket(zmq.PAIR)
-    port = port_dict.get('s1')
-    ip = ip_dict.get('s1')
+    port = port_dict.get(leader)
+    ip = ip_dict.get(leader)
     socket_Leader.connect("tcp://%s:%s" % (ip, port))
     # socket1 = context.socket(zmq.PAIR)
     # socket2 = context.socket(zmq.PAIR)
