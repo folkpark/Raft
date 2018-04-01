@@ -173,13 +173,10 @@ def clientThread():
 # leader must not be None at the end of this function
 def election():
     global leader
+    global role
     leader = 's1'
 
     context = zmq.Context()
-    socket_Leader = context.socket(zmq.PAIR)
-    port = port_dict.get(leader)
-    ip = ip_dict.get(leader)
-    socket_Leader.connect("tcp://%s:%s" % (ip, port))
     # socket1 = context.socket(zmq.PAIR)
     # socket2 = context.socket(zmq.PAIR)
     # socket3 = context.socket(zmq.PAIR)
@@ -213,11 +210,20 @@ def election():
     #request for votes. Vote for self. If votes is 3 or
     #greater than send out a victory message.
 
+    # while leader == None:
+    #
+
     if nodeName == leader:
         role = "leader"
     else:
         role = "follower"
 
+    socket_Leader = context.socket(zmq.PAIR)
+    socket_test = context.socket(zmq.PAIR)
+    port = port_dict.get(leader)
+    ip = ip_dict.get(leader)
+    socket_test = context.socket(zmq.PAIR)
+    socket_Leader.connect("tcp://%s:%s" % (ip, port))
     return socket_Leader
 
 if __name__ == '__main__':
