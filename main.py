@@ -222,7 +222,7 @@ def election():
             leader = None
 
             print("about to enter msg line")
-            msg = socket1.recv(10240, 0x40)
+            msg = socket1.poll()
             print("Made it past the msg line")
             pmessage = pickle.loads(msg)
             print("pmessage is %s " % (pmessage))
