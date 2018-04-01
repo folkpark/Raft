@@ -102,12 +102,13 @@ def serverThread():
 
 
 def clientThread():
-    port = port_dict.get('s2')
+    port = port_dict.get('s1')
+    ip = ip_dict.get('s1')
     print("Port: %s" % port)
     print(port_dict)
     context = zmq.Context()
     socket = context.socket(zmq.PAIR)
-    socket.connect("tcp://10.142.0.3:%s" % port)
+    socket.connect("tcp://%s:%s" % (ip,port))
 
     #Connect to all other nodes, but only send msg's to LEADER
     # context = zmq.Context()
@@ -244,7 +245,7 @@ if __name__ == '__main__':
             's4': "5009"
         }
 
-    ip = ip_dict.get(nodeName)
+    #ip = ip_dict.get(nodeName)
     # leader_ip = ip_dict.get('s1')
     # leader_port = port_dict.get('s1')
     # print("Leader Port: %s" % leader_port)
