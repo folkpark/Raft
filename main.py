@@ -156,10 +156,6 @@ def election():
             socket_List.append(socket4)
         count += 1
 
-    socket1.setblocking(0)
-    socket2.setblocking(0)
-    socket3.setblocking(0)
-    socket4.setblocking(0)
 
     #Loop with random timer
     #If no candidate messages received, then send out
