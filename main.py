@@ -220,6 +220,13 @@ def election():
             print(".", end='', flush=True)
             leader = None
 
+            campaignMessage = "vote_%s" % (nodeName)
+            p = pickle.dumps(campaignMessage)
+            socket1.send(p)
+            socket2.send(p)
+            socket3.send(p)
+            socket4.send(p)
+
             msg = socket1.recv()
             pmessage = pickle.loads(msg)
             a,b = pmessage.split("_")
