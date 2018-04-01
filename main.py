@@ -102,7 +102,7 @@ def serverThread():
 
 
 def clientThread():
-    port = port_dict.get('s1')
+    port = port_dict.get('s2')
     print("Port: %s" % port)
     print(port_dict)
     context = zmq.Context()
