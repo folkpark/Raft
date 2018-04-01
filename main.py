@@ -222,7 +222,7 @@ def election():
     socket_test = context.socket(zmq.PAIR)
     port = port_dict.get(leader)
     ip = ip_dict.get(leader)
-    socket_test = context.socket(zmq.PAIR)
+    socket_test.connect("tcp://%s:%s" % (ip, port))
     socket_Leader.connect("tcp://%s:%s" % (ip, port))
     return socket_Leader
 
