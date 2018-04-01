@@ -124,7 +124,6 @@ def clientThread():
 def election():
     global leader
     global role
-    #leader = 's3'
     print("No leader known! Starting election protocol")
 
     context = zmq.Context()
@@ -168,13 +167,17 @@ def election():
 
     ###
     now = datetime.datetime.now()
-    print(now)
     min = now.minute
     if min%2 == 0:
         winner = 's2'
+        if nodeName == 's2':
+            randTimeValue = 1.191828303520895
     else:
         winner = 's5'
+        if nodeName == 's5':
+            randTimeValue = 1.631079537058798
     ###
+    print(randTimeValue)
 
     end_timer = start_timer + randTimeValue
     leader = None
