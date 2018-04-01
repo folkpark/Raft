@@ -18,7 +18,7 @@ import time
 import sys
 import datetime
 import random
-#from google.cloud import storage
+from google.cloud import storage
 
 global ip
 global port
@@ -31,8 +31,8 @@ global leader
 
 # This function is a code same on how to upload a file to
 # secure storage on google's cloud services.
-'''
-def upload_blob(bucket_name, source_file_name, destination_blob_name):
+
+def upload_to_cloud(bucket_name, source_file_name, destination_blob_name):
     """Uploads a file to the bucket."""
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
@@ -43,7 +43,15 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     print('File {} uploaded to {}.'.format(
         source_file_name,
         destination_blob_name))
-'''
+
+
+def write_log_to_stable_storage(logEntry):
+    file = open("log.txt", "a")
+    #write the log out to a file
+    file.write('\n')
+    file.write(logEntry)
+    file.close()
+
 
 def serverThread():
     context = zmq.Context()
@@ -78,7 +86,7 @@ def serverThread():
         socket4.bind("tcp://10.142.0.6:%s" % port_List[9])
     while True:
         # print("Inside Server Thread Loop")
-        p = pickle.dumps("Server message to client")
+        p = pickle.dumps("Leader message to follower")
         socket1.send(p)
         socket2.send(p)
         socket3.send(p)
@@ -163,7 +171,6 @@ def election():
 
     start_timer = time.time()
     randTimeValue = random.uniform(1.0, 5.0)
-    print(randTimeValue)
 
     ###
     now = datetime.datetime.now()
