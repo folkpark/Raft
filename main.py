@@ -155,6 +155,8 @@ def election():
             socket_List.append(socket4)
         count += 1
 
+    socket1.setblocking(False)
+
     #Loop with random timer
     #If no candidate messages received, then send out
     #request for votes. Vote for self. If votes is 3 or
