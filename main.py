@@ -169,6 +169,7 @@ def election():
 
     ###
     now = datetime.datetime.now()
+    print(now)
     min = now.minute
     if min%2 == 0:
         print('s2')
