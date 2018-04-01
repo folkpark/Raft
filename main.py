@@ -162,7 +162,6 @@ def election():
     #request for votes. Vote for self. If votes is 3 or
     #greater than send out a victory message.
 
-    winner = None
     start_timer = time.time()
     randTimeValue = random.uniform(1.0, 5.0)
     print(randTimeValue)
@@ -172,9 +171,9 @@ def election():
     print(now)
     min = now.minute
     if min%2 == 0:
-        print('s2')
+        winner = 's2'
     else:
-        print('s5')
+        winner = 's5'
     ###
 
     end_timer = start_timer + randTimeValue
