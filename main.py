@@ -16,6 +16,7 @@ import pickle
 import threading
 import time
 import sys
+import datetime
 import random
 #from google.cloud import storage
 
@@ -165,17 +166,16 @@ def election():
     start_timer = time.time()
     randTimeValue = random.uniform(1.0, 5.0)
     print(randTimeValue)
-    rand = int(randTimeValue)
-    if rand == 1:
-        winner = "s1"
-    elif rand == 2:
-        winner = 's2'
-    elif rand == 3:
-        winner = 's3'
-    elif rand == 4:
-        winner = 's4'
-    elif rand == 5:
-        winner = 's5'
+
+    ###
+    now = datetime.datetime.now()
+    min = now.minute
+    if min%2 == 0:
+        print('s2')
+    else:
+        print('s5')
+    ###
+
     end_timer = start_timer + randTimeValue
     leader = None
     timedOut = False
@@ -187,7 +187,7 @@ def election():
             timedOut = True
 
         if timedOut:
-            print("I haved timed Out!")
+            print("Time Out!")
             role = "candidate"
             leader = winner
             break
@@ -282,7 +282,7 @@ def election():
             #     socket4.send(p)
             #     voted = True
 
-    time.sleep(4)
+    # time.sleep(4)
     socket_Leader = context.socket(zmq.PAIR)
     port = port_dict.get(leader)
     ip = ip_dict.get(leader)
