@@ -16,6 +16,7 @@ import pickle
 import threading
 import time
 import sys
+import random
 #from google.cloud import storage
 
 global ip
@@ -108,58 +109,6 @@ def clientThread():
     # socket = context.socket(zmq.PAIR)
     # socket.connect("tcp://%s:%s" % (ip,port))
 
-    #Connect to all other nodes, but only send msg's to LEADER
-    # context = zmq.Context()
-    # socket1 = context.socket(zmq.PAIR)
-    # socket2 = context.socket(zmq.PAIR)
-    # socket3 = context.socket(zmq.PAIR)
-    # socket4 = context.socket(zmq.PAIR)
-    # count = 0
-    # connections = []
-    # socket_List = []
-    # for key in port_dict:
-    #     tempIP = ip_dict.get(key)
-    #     tempPort = ip_dict.get(key)
-    #     if count is 0:
-    #         socket1.connect("tcp://%s:%s" % (tempIP,tempPort))
-    #         connections.append((key, 1))
-    #         socket_List.append(socket1)
-    #     elif count is 1:
-    #         socket2.connect("tcp://%s:%s" % (tempIP, tempPort))
-    #         connections.append((key, 2))
-    #         socket_List.append(socket2)
-    #     elif count is 2:
-    #         socket3.connect("tcp://%s:%s" % (tempIP, tempPort))
-    #         connections.append((key, 3))
-    #         socket_List.append(socket3)
-    #     elif count is 3:
-    #         socket4.connect("tcp://%s:%s" % (tempIP, tempPort))
-    #         connections.append((key, 4))
-    #         socket_List.append(socket4)
-    #     count += 1
-
-    # print("Leader is: %s" % leader)
-    # if leader == None:
-    #     election()
-    #
-    # print("New Leader is: %s" % leader)
-    #
-    # leaderIndex = -1
-    # for conn in connections:
-    #     if conn[0] == leader:
-    #         if conn[1] == 1:
-    #             socket_L = socket1
-    #             leaderIndex = 0
-    #         elif conn[1] == 2:
-    #             socket_L = socket2
-    #             leaderIndex = 1
-    #         elif conn[1] == 3:
-    #             socket_L = socket3
-    #             leaderIndex = 2
-    #         elif conn[1] == 4:
-    #             socket_L = socket4
-    #             leaderIndex = 3
-
     while True:
         if leader == None:
             socket = election()
@@ -175,6 +124,7 @@ def election():
     global leader
     global role
     leader = 's1'
+    print("No leader known! Starting election protocol")
 
     context = zmq.Context()
     socket1 = context.socket(zmq.PAIR)
@@ -210,15 +160,25 @@ def election():
     #request for votes. Vote for self. If votes is 3 or
     #greater than send out a victory message.
 
-    # while leader == None:
-    #     msg = socket1.recv()
-    #     pmessage = pickle.loads(msg)
-    #     print(pmessage)
+    start_timer = time.time()
+    randTimeValue = random.uniform(1.0, 8.0)
+    print(randTimeValue)
+    end_timer = start_timer + randTimeValue
+    leader = None
+    timedOut = False
+    while leader == None:
+        currentTime = time.time()
+        if currentTime >= end_timer:
+            timedOut = True
 
-    if nodeName == leader:
-        role = "leader"
-    else:
-        role = "follower"
+        if timedOut:
+            print("I haved timed Out!")
+            leader = 's1'
+            # ASK for votes
+        elif timedOut == False:
+            time.sleep(0.25)
+            print(".", end='', flush=True)
+            leader = None
 
     socket_Leader = context.socket(zmq.PAIR)
     port = port_dict.get(leader)
