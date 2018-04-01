@@ -107,7 +107,7 @@ def clientThread():
     print(port_dict)
     context = zmq.Context()
     socket = context.socket(zmq.PAIR)
-    socket.connect("tcp://10.142.0.2:%s" % port)
+    socket.connect("tcp://10.142.0.3:%s" % port)
 
     #Connect to all other nodes, but only send msg's to LEADER
     # context = zmq.Context()
