@@ -155,7 +155,6 @@ def election():
             socket_List.append(socket4)
         count += 1
 
-    socket1.setblocking(False)
 
     #Loop with random timer
     #If no candidate messages received, then send out
@@ -223,7 +222,7 @@ def election():
             leader = None
 
             print("about to enter msg line")
-            msg = socket1.recv()
+            msg = socket1.recv(1024, socket1.MSG_DONTWAIT)
             print("Made it past the msg line")
             pmessage = pickle.loads(msg)
             print("pmessage is %s " % (pmessage))
