@@ -84,77 +84,90 @@ def serverThread():
         message = socket1.recv()
         pmessage = pickle.loads(message)
         print("Received: ", pmessage)
+
+        # message = socket2.recv()
+        # pmessage = pickle.loads(message)
+        # print("Received: ", pmessage)
+        #
+        # message = socket3.recv()
+        # pmessage = pickle.loads(message)
+        # print("Received: ", pmessage)
+        #
+        # message = socket4.recv()
+        # pmessage = pickle.loads(message)
+        # print("Received: ", pmessage)
+
         #send(ip_dict.get('c1'), "Gotcha")
         time.sleep(1)
 
 
 def clientThread():
-    # port = port_dict.get('s1')
-    # print("Port: %s" % port)
-    # print(port_dict)
-    # context = zmq.Context()
-    # socket = context.socket(zmq.PAIR)
-    # socket.connect("tcp://10.142.0.2:%s" % port)
+    port = port_dict.get('s1')
+    print("Port: %s" % port)
+    print(port_dict)
+    context = zmq.Context()
+    socket = context.socket(zmq.PAIR)
+    socket.connect("tcp://10.142.0.2:%s" % port)
 
     #Connect to all other nodes, but only send msg's to LEADER
-    context = zmq.Context()
-    socket1 = context.socket(zmq.PAIR)
-    socket2 = context.socket(zmq.PAIR)
-    socket3 = context.socket(zmq.PAIR)
-    socket4 = context.socket(zmq.PAIR)
-    count = 0
-    connections = []
-    socket_List = []
-    for key in port_dict:
-        tempIP = ip_dict.get(key)
-        tempPort = ip_dict.get(key)
-        if count is 0:
-            socket1.connect("tcp://%s:%s" % (tempIP,tempPort))
-            connections.append((key, 1))
-            socket_List.append(socket1)
-        elif count is 1:
-            socket2.connect("tcp://%s:%s" % (tempIP, tempPort))
-            connections.append((key, 2))
-            socket_List.append(socket2)
-        elif count is 2:
-            socket3.connect("tcp://%s:%s" % (tempIP, tempPort))
-            connections.append((key, 3))
-            socket_List.append(socket3)
-        elif count is 3:
-            socket4.connect("tcp://%s:%s" % (tempIP, tempPort))
-            connections.append((key, 4))
-            socket_List.append(socket4)
-        count += 1
+    # context = zmq.Context()
+    # socket1 = context.socket(zmq.PAIR)
+    # socket2 = context.socket(zmq.PAIR)
+    # socket3 = context.socket(zmq.PAIR)
+    # socket4 = context.socket(zmq.PAIR)
+    # count = 0
+    # connections = []
+    # socket_List = []
+    # for key in port_dict:
+    #     tempIP = ip_dict.get(key)
+    #     tempPort = ip_dict.get(key)
+    #     if count is 0:
+    #         socket1.connect("tcp://%s:%s" % (tempIP,tempPort))
+    #         connections.append((key, 1))
+    #         socket_List.append(socket1)
+    #     elif count is 1:
+    #         socket2.connect("tcp://%s:%s" % (tempIP, tempPort))
+    #         connections.append((key, 2))
+    #         socket_List.append(socket2)
+    #     elif count is 2:
+    #         socket3.connect("tcp://%s:%s" % (tempIP, tempPort))
+    #         connections.append((key, 3))
+    #         socket_List.append(socket3)
+    #     elif count is 3:
+    #         socket4.connect("tcp://%s:%s" % (tempIP, tempPort))
+    #         connections.append((key, 4))
+    #         socket_List.append(socket4)
+    #     count += 1
 
-    print("Leader is: %s" % leader)
-    if leader == None:
-        election()
-
-    print("New Leader is: %s" % leader)
-
-    leaderIndex = -1
-    for conn in connections:
-        if conn[0] == leader:
-            if conn[1] == 1:
-                socket_L = socket1
-                leaderIndex = 0
-            elif conn[1] == 2:
-                socket_L = socket2
-                leaderIndex = 1
-            elif conn[1] == 3:
-                socket_L = socket3
-                leaderIndex = 2
-            elif conn[1] == 4:
-                socket_L = socket4
-                leaderIndex = 3
+    # print("Leader is: %s" % leader)
+    # if leader == None:
+    #     election()
+    #
+    # print("New Leader is: %s" % leader)
+    #
+    # leaderIndex = -1
+    # for conn in connections:
+    #     if conn[0] == leader:
+    #         if conn[1] == 1:
+    #             socket_L = socket1
+    #             leaderIndex = 0
+    #         elif conn[1] == 2:
+    #             socket_L = socket2
+    #             leaderIndex = 1
+    #         elif conn[1] == 3:
+    #             socket_L = socket3
+    #             leaderIndex = 2
+    #         elif conn[1] == 4:
+    #             socket_L = socket4
+    #             leaderIndex = 3
 
     while True:
-        msg = socket_List[leaderIndex].recv()
+        msg = socket.recv()
         print("Inside CLient Thread Loop")
         pmessage = pickle.loads(msg)
         print(pmessage)
         p = pickle.dumps("client message to LEADER")
-        socket_List[leaderIndex].send(p)
+        socket.send(p)
         time.sleep(1)
 
 # leader must not be None at the end of this function
