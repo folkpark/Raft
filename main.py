@@ -164,7 +164,7 @@ def election():
     randTimeValue = random.uniform(1.0, 8.0)
     print(randTimeValue)
     end_timer = start_timer + randTimeValue
-    #leader = None
+    leader = None
     timedOut = False
     voteCount = 1 #One because you vote for self
     voted = False
