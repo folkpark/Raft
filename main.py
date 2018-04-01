@@ -51,7 +51,7 @@ def write_log_to_stable_storage(logEntry):
     file.write('\n')
     file.write(logEntry)
     file.close()
-    upload_to_cloud(bucket, "log.txt", "log.txt")
+    #upload_to_cloud(bucket, "log.txt", "log.txt")
 
 def serverThread():
     context = zmq.Context()
@@ -95,7 +95,7 @@ def serverThread():
         socket2.send(p)
         socket3.send(p)
         socket4.send(p)
-        write_log_to_stable_storage(toFollowerMsg)
+        write_log_to_stable_storage(toFollowerMsg+"committed")
         message = socket1.recv()
         pmessage = pickle.loads(message)
         print("Received: ", pmessage)
@@ -128,6 +128,7 @@ def clientThread():
         msg = socket.recv()
         pmessage = pickle.loads(msg)
         print(pmessage)
+        write_log_to_stable_storage(pmessage)
         p = pickle.dumps(nodeName + " message to LEADER")
         socket.send(p)
         time.sleep(1)
