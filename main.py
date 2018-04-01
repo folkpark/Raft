@@ -51,7 +51,7 @@ def write_log_to_stable_storage(logEntry):
     file.write('\n')
     file.write(logEntry)
     file.close()
-
+    upload_to_cloud(bucket, "log.txt", "log.txt")
 
 def serverThread():
     context = zmq.Context()
@@ -84,13 +84,18 @@ def serverThread():
         socket2.bind("tcp://10.142.0.6:%s" % port_List[6])
         socket3.bind("tcp://10.142.0.6:%s" % port_List[8])
         socket4.bind("tcp://10.142.0.6:%s" % port_List[9])
+    event = 1
     while True:
         # print("Inside Server Thread Loop")
-        p = pickle.dumps("Leader message to follower")
+        event +=1
+        strEvent = str(event)
+        toFollowerMsg = "Leader to follower: event %s" % (strEvent)
+        p = pickle.dumps(toFollowerMsg)
         socket1.send(p)
         socket2.send(p)
         socket3.send(p)
         socket4.send(p)
+        write_log_to_stable_storage(toFollowerMsg)
         message = socket1.recv()
         pmessage = pickle.loads(message)
         print("Received: ", pmessage)
@@ -107,7 +112,6 @@ def serverThread():
         pmessage = pickle.loads(message)
         print("Received: ", pmessage)
 
-        #send(ip_dict.get('c1'), "Gotcha")
         time.sleep(1)
 
 
@@ -307,6 +311,7 @@ if __name__ == '__main__':
     print("My name is: " + nodeName)
     print("My role is: " + role)
     leader = None
+    bucket = None
 
     ip_dict = {
         's1':'10.142.0.2',
@@ -321,6 +326,7 @@ if __name__ == '__main__':
             "5005","5006","5007","5008","5009",]
     port_dict = {}
     if nodeName == "s1":
+        bucket = "s1_bucket"
         port_dict = {
             's2':"5000",
             's3': "5001",
@@ -328,6 +334,7 @@ if __name__ == '__main__':
             's5': "5003"
         }
     elif nodeName == 's2':
+        bucket = "s1_bucket"
         port_dict = {
             's1':"5000",
             's3': "5004",
@@ -335,6 +342,7 @@ if __name__ == '__main__':
             's5': "5006"
         }
     elif nodeName == 's3':
+        bucket = "s3_buck"
         port_dict = {
             's1':"5001",
             's2': "5004",
@@ -342,6 +350,7 @@ if __name__ == '__main__':
             's5': "5008"
         }
     elif nodeName == 's4':
+        bucket = "s4_bucket"
         port_dict = {
             's1':"5002",
             's2': "5005",
@@ -349,6 +358,7 @@ if __name__ == '__main__':
             's5': "5009"
         }
     elif nodeName == 's5':
+        bucket = "s5_bucket"
         port_dict = {
             's1':"5003",
             's2': "5006",
