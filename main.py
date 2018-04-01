@@ -161,9 +161,21 @@ def election():
     #request for votes. Vote for self. If votes is 3 or
     #greater than send out a victory message.
 
+    winner = None
     start_timer = time.time()
-    randTimeValue = random.uniform(1.0, 8.0)
+    randTimeValue = random.uniform(1.0, 5.0)
     print(randTimeValue)
+    rand = int(randTimeValue)
+    if rand == 1:
+        winner = "s1"
+    elif rand == 2:
+        winner = 's2'
+    elif rand == 3:
+        winner = 's3'
+    elif rand == 4:
+        winner = 's4'
+    elif rand == 5:
+        winner = 's5'
     end_timer = start_timer + randTimeValue
     leader = None
     timedOut = False
@@ -177,6 +189,7 @@ def election():
         if timedOut:
             print("I haved timed Out!")
             role = "candidate"
+            leader = winner
             # print("Asking for votes...")
             # # ASK for votes
             # campaignMessage = "vote_%s" % (nodeName)
@@ -219,7 +232,6 @@ def election():
         elif timedOut == False:
             time.sleep(0.25)
             print(".", end='', flush=True)
-            leader = 's4'
 
             # print("about to enter msg line")
             # msg = socket1.recv()
