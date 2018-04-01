@@ -102,13 +102,11 @@ def serverThread():
 
 
 def clientThread():
-    port = port_dict.get('s1')
-    ip = ip_dict.get('s1')
-    print("Port: %s" % port)
-    print(port_dict)
-    context = zmq.Context()
-    socket = context.socket(zmq.PAIR)
-    socket.connect("tcp://%s:%s" % (ip,port))
+    # port = port_dict.get('s1')
+    # ip = ip_dict.get('s1')
+    # context = zmq.Context()
+    # socket = context.socket(zmq.PAIR)
+    # socket.connect("tcp://%s:%s" % (ip,port))
 
     #Connect to all other nodes, but only send msg's to LEADER
     # context = zmq.Context()
@@ -163,8 +161,9 @@ def clientThread():
     #             leaderIndex = 3
 
     while True:
+        if leader == None:
+            socket = election()
         msg = socket.recv()
-        # print("Inside CLient Thread Loop")
         pmessage = pickle.loads(msg)
         print(pmessage)
         p = pickle.dumps(nodeName + " message to LEADER")
@@ -174,7 +173,40 @@ def clientThread():
 # leader must not be None at the end of this function
 def election():
     global leader
-    leader = 's2'
+    leader = 's1'
+
+    context = zmq.Context()
+    socket_Leader = context.socket(zmq.PAIR)
+    port = port_dict.get('s1')
+    ip = ip_dict.get('s1')
+    socket_Leader.connect("tcp://%s:%s" % (ip, port))
+    # socket1 = context.socket(zmq.PAIR)
+    # socket2 = context.socket(zmq.PAIR)
+    # socket3 = context.socket(zmq.PAIR)
+    # socket4 = context.socket(zmq.PAIR)
+    # count = 0
+    # connections = []
+    # socket_List = []
+    # for key in port_dict:
+    #     tempIP = ip_dict.get(key)
+    #     tempPort = ip_dict.get(key)
+    #     if count is 0:
+    #         socket1.connect("tcp://%s:%s" % (tempIP,tempPort))
+    #         connections.append((key, 1))
+    #         socket_List.append(socket1)
+    #     elif count is 1:
+    #         socket2.connect("tcp://%s:%s" % (tempIP, tempPort))
+    #         connections.append((key, 2))
+    #         socket_List.append(socket2)
+    #     elif count is 2:
+    #         socket3.connect("tcp://%s:%s" % (tempIP, tempPort))
+    #         connections.append((key, 3))
+    #         socket_List.append(socket3)
+    #     elif count is 3:
+    #         socket4.connect("tcp://%s:%s" % (tempIP, tempPort))
+    #         connections.append((key, 4))
+    #         socket_List.append(socket4)
+    #     count += 1
 
     #Loop with random timer
     #If no candidate messages received, then send out
@@ -186,7 +218,7 @@ def election():
     else:
         role = "follower"
 
-    return leader
+    return socket_Leader
 
 if __name__ == '__main__':
     nodeName = sys.argv[1]
