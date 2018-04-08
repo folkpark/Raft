@@ -97,23 +97,28 @@ def serverThread():
         # print("Inside Server Thread Loop")
         event +=1
         strEvent = str(event)
-        toFollowerMsg = "Leader to follower: event %s" % (strEvent)
-        p = pickle.dumps(toFollowerMsg)
+        # toFollowerMsg = "Leader to follower: event %s" % (strEvent)
+        # p = pickle.dumps(toFollowerMsg)
         # socket1.send(p)
         # socket2.send(p)
         # socket3.send(p)
         # socket4.send(p)
-        socket5.send(p)
-        socket6.send(p)
-        write_log_to_stable_storage(toFollowerMsg+"committed")
+        # socket5.send(p)
+        # socket6.send(p)
+        #write_log_to_stable_storage(toFollowerMsg+"committed")
 
         message = socket5.recv()
         pmessage = pickle.loads(message)
-        print("Received: ", pmessage)
+        # print("Received: ", pmessage)
+        action, location = pmessage.split("_")
+        print("Action: %s" % action )
+        print("Location: %s" % location)
+        # if action == 'PUNCH':
+        #
 
         message = socket6.recv()
         pmessage = pickle.loads(message)
-        print("Received: ", pmessage)
+        # print("Received: ", pmessage)
 
         # message = socket1.recv()
         # pmessage = pickle.loads(message)
