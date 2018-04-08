@@ -145,16 +145,34 @@ def clientThread():
     while True:
         # if leader == None:
         #     socket = election()
+        if role != 'Leader':
+            action = printMenu()
+            if action == '1':
+                p = pickle.dumps("PUNCH_LEFT")
+            elif action == '2':
+                p = pickle.dumps("PUNCH_RIGHT")
+            elif action == '3':
+                p = pickle.dumps("BLOCK_LEFT")
+            elif action == '4':
+                p = pickle.dumps("BLOCK_RIGHT")
+            # msg = socket.recv()
+            # pmessage = pickle.loads(msg)
+            # print(pmessage)
+            # if nodeName != 'c1' or nodeName != 'c2':
+            #     write_log_to_stable_storage(pmessage)
 
-        msg = socket.recv()
-        pmessage = pickle.loads(msg)
-        print(pmessage)
-        if nodeName != 'c1' or nodeName != 'c2':
-            write_log_to_stable_storage(pmessage)
-        p = pickle.dumps(nodeName + " message to LEADER")
-        print("sending to leader")
-        socket.send(p)
+            print("sending to leader")
+            socket.send(p)
         time.sleep(1)
+
+def printMenu():
+    print("FIGHT!!!")
+    print("Punch Left 1:")
+    print("Punch Right 2:")
+    print("Block Left 3:")
+    print("Block Right 4:")
+    n = input("Please enter selection: ")
+    return n
 
 #generate random number between 1-10
 def randomNum():
@@ -387,7 +405,7 @@ if __name__ == '__main__':
             's1':"6001",
         }
 
-    #make sure the log is clear. 
+    #make sure the log is clear.
     with open('log.txt', 'w'):
         pass
 
