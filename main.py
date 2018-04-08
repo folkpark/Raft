@@ -106,21 +106,30 @@ def serverThread():
         socket5.send(p)
         socket6.send(p)
         write_log_to_stable_storage(toFollowerMsg+"committed")
-        message = socket1.recv()
+
+        message = socket5.recv()
         pmessage = pickle.loads(message)
         print("Received: ", pmessage)
 
-        message = socket2.recv()
+        message = socket6.recv()
         pmessage = pickle.loads(message)
         print("Received: ", pmessage)
 
-        message = socket3.recv()
-        pmessage = pickle.loads(message)
-        print("Received: ", pmessage)
-
-        message = socket4.recv()
-        pmessage = pickle.loads(message)
-        print("Received: ", pmessage)
+        # message = socket1.recv()
+        # pmessage = pickle.loads(message)
+        # print("Received: ", pmessage)
+        #
+        # message = socket2.recv()
+        # pmessage = pickle.loads(message)
+        # print("Received: ", pmessage)
+        #
+        # message = socket3.recv()
+        # pmessage = pickle.loads(message)
+        # print("Received: ", pmessage)
+        #
+        # message = socket4.recv()
+        # pmessage = pickle.loads(message)
+        # print("Received: ", pmessage)
 
         time.sleep(1)
 
@@ -135,7 +144,7 @@ def clientThread():
     while True:
         # if leader == None:
         #     socket = election()
-        
+
         msg = socket.recv()
         pmessage = pickle.loads(msg)
         print(pmessage)
@@ -305,7 +314,10 @@ def election():
 if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
-    role = "Follower"
+    if nodeName == 's1':
+        role = "Leader"
+    else:
+        role = "Follower"
     global leader  # String value of who the leader is
     print("My name is: " + nodeName)
     print("My role is: " + role)
