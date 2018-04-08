@@ -387,6 +387,10 @@ if __name__ == '__main__':
             's1':"6001",
         }
 
+    #make sure the log is clear. 
+    with open('log.txt', 'w'):
+        pass
+
     time.sleep(3)
     print("Starting server thread...")
     serverThread = threading.Thread(target=serverThread)
