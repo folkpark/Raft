@@ -135,12 +135,14 @@ def clientThread():
     while True:
         # if leader == None:
         #     socket = election()
+        
         msg = socket.recv()
         pmessage = pickle.loads(msg)
         print(pmessage)
         if nodeName != 'c1' or nodeName != 'c2':
             write_log_to_stable_storage(pmessage)
         p = pickle.dumps(nodeName + " message to LEADER")
+        print("sending to leader")
         socket.send(p)
         time.sleep(1)
 
