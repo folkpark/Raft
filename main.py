@@ -84,6 +84,10 @@ def serverThread():
         socket2.bind("tcp://10.142.0.6:%s" % port_List[6])
         socket3.bind("tcp://10.142.0.6:%s" % port_List[8])
         socket4.bind("tcp://10.142.0.6:%s" % port_List[9])
+    elif nodeName == 'c1':
+        socket1.bind("tcp://10.142.0.7:%s" % port_List[10])
+    elif nodeName == 'c2':
+        socket1.bind("tcp://10.142.0.8:%s" % port_List[11])
     event = 1
     while True:
         # print("Inside Server Thread Loop")
@@ -116,22 +120,28 @@ def serverThread():
 
 
 def clientThread():
-    # port = port_dict.get('s1')
-    # ip = ip_dict.get('s1')
-    # context = zmq.Context()
-    # socket = context.socket(zmq.PAIR)
-    # socket.connect("tcp://%s:%s" % (ip,port))
+    port = port_dict.get('s1')
+    ip = ip_dict.get('s1')
+    context = zmq.Context()
+    socket = context.socket(zmq.PAIR)
+    socket.connect("tcp://%s:%s" % (ip,port))
 
     while True:
-        if leader == None:
-            socket = election()
+        # if leader == None:
+        #     socket = election()
         msg = socket.recv()
         pmessage = pickle.loads(msg)
         print(pmessage)
-        write_log_to_stable_storage(pmessage)
+        if nodeName != 'c1' or nodeName != 'c2':
+            write_log_to_stable_storage(pmessage)
         p = pickle.dumps(nodeName + " message to LEADER")
         socket.send(p)
         time.sleep(1)
+
+#generate random number between 1-10
+def randomNum():
+    rand = random.randint(1,10)
+    return rand
 
 # leader must not be None at the end of this function
 def election():
@@ -177,20 +187,6 @@ def election():
     start_timer = time.time()
     randTimeValue = random.uniform(1.0, 5.0)
 
-    ###
-    now = datetime.datetime.now()
-    min = now.minute
-    if min%2 == 0:
-        winner = 's2'
-        if nodeName == 's2':
-            randTimeValue = 1.191828303520895
-    else:
-        winner = 's5'
-        if nodeName == 's5':
-            randTimeValue = 1.631079537058798
-    ###
-    print(randTimeValue)
-
     end_timer = start_timer + randTimeValue
     leader = None
     timedOut = False
@@ -204,98 +200,92 @@ def election():
         if timedOut:
             print("Time Out!")
             role = "candidate"
-            leader = winner
-            break
-            # print("Asking for votes...")
-            # # ASK for votes
-            # campaignMessage = "vote_%s" % (nodeName)
-            # p = pickle.dumps(campaignMessage)
-            # socket1.send(p)
-            # socket2.send(p)
-            # socket3.send(p)
-            # socket4.send(p)
-            #
-            # #Count the votes
-            # msg = socket1.recv()
-            # pmessage = pickle.loads(msg)
-            # if pmessage == "vote":
-            #     voteCount += 1
-            #
-            # msg = socket2.recv()
-            # pmessage = pickle.loads(msg)
-            # if pmessage == "vote":
-            #     voteCount += 1
-            #
-            # msg = socket3.recv()
-            # pmessage = pickle.loads(msg)
-            # if pmessage == "vote":
-            #     voteCount += 1
-            #
-            # msg = socket4.recv()
-            # pmessage = pickle.loads(msg)
-            # if pmessage == "vote":
-            #     voteCount += 1
-            #
-            # if voteCount >= 3:
-            #     leader = nodeName
-            #     #Send victory message
-            #     p = pickle.dumps("victory_%s" % (nodeName))
-            #     socket1.send(p)
-            #     socket2.send(p)
-            #     socket3.send(p)
-            #     socket4.send(p)
+            # ASK for votes
+            campaignMessage = "vote_%s" % (nodeName)
+            p = pickle.dumps(campaignMessage)
+            socket1.send(p)
+            socket2.send(p)
+            socket3.send(p)
+            socket4.send(p)
+
+            #Count the votes
+            msg = socket1.recv()
+            pmessage = pickle.loads(msg)
+            if pmessage == "vote":
+                voteCount += 1
+
+            msg = socket2.recv()
+            pmessage = pickle.loads(msg)
+            if pmessage == "vote":
+                voteCount += 1
+
+            msg = socket3.recv()
+            pmessage = pickle.loads(msg)
+            if pmessage == "vote":
+                voteCount += 1
+
+            msg = socket4.recv()
+            pmessage = pickle.loads(msg)
+            if pmessage == "vote":
+                voteCount += 1
+
+            if voteCount >= 3:
+                leader = nodeName
+                #Send victory message
+                p = pickle.dumps("victory_%s" % (nodeName))
+                socket1.send(p)
+                socket2.send(p)
+                socket3.send(p)
+                socket4.send(p)
 
         elif timedOut == False:
             time.sleep(0.25)
             print(".", end='', flush=True)
 
-            # print("about to enter msg line")
-            # msg = socket1.recv()
-            # print("Made it past the msg line")
-            # pmessage = pickle.loads(msg)
-            # print("pmessage is %s " % (pmessage))
-            # if pmessage != None:
-            #     a,b = pmessage.split("_")
-            #     if a == "victory": #another leader was declared
-            #         leader = b
-            #         break
-            #     elif a == "vote" and voted == False: #give the candidate your vote
-            #         p = pickle.dumps("vote")
-            #         socket1.send(p)
-            #         voted = True
-            #
-            # msg = socket2.recv()
-            # pmessage = pickle.loads(msg)
-            # a,b = pmessage.split("_")
-            # if a == "victory": #another leader was declared
-            #     leader = b
-            #     break
-            # elif a == "vote" and voted == False: #give the candidate your vote
-            #     p = pickle.dumps("vote")
-            #     socket2.send(p)
-            #     voted = True
-            #
-            # msg = socket3.recv()
-            # pmessage = pickle.loads(msg)
-            # a,b = pmessage.split("_")
-            # if a == "victory": #another leader was declared
-            #     leader = b
-            #     break
-            # elif a == "vote" and voted == False: #give the candidate your vote
-            #     p = pickle.dumps("vote")
-            #     socket3.send(p)
-            #     voted = True
-            #
-            # msg = socket4.recv()
-            # pmessage = pickle.loads(msg)
-            # a,b = pmessage.split("_")
-            # if a == "victory": #another leader was declared
-            #     leader = b
-            #     break
-            # elif a == "vote" and voted == False: #give the candidate your vote
-            #     p = pickle.dumps("vote")
-            #     socket4.send(p)
-            #     voted = True
+
+            msg = socket1.recv()
+            pmessage = pickle.loads(msg)
+            a,b = pmessage.split("_")
+            if a == "victory": #another leader was declared
+                leader = b
+                break
+            elif a == "vote" and voted == False: #give the candidate your vote
+                p = pickle.dumps("vote")
+                socket1.send(p)
+                voted = True
+
+            msg = socket2.recv()
+            pmessage = pickle.loads(msg)
+            a,b = pmessage.split("_")
+            if a == "victory": #another leader was declared
+                leader = b
+                break
+            elif a == "vote" and voted == False: #give the candidate your vote
+                p = pickle.dumps("vote")
+                socket2.send(p)
+                voted = True
+
+            msg = socket3.recv()
+            pmessage = pickle.loads(msg)
+            a,b = pmessage.split("_")
+            if a == "victory": #another leader was declared
+                leader = b
+                break
+            elif a == "vote" and voted == False: #give the candidate your vote
+                p = pickle.dumps("vote")
+                socket3.send(p)
+                voted = True
+
+            msg = socket4.recv()
+            pmessage = pickle.loads(msg)
+            a,b = pmessage.split("_")
+            if a == "victory": #another leader was declared
+                leader = b
+                break
+            elif a == "vote" and voted == False: #give the candidate your vote
+                p = pickle.dumps("vote")
+                socket4.send(p)
+                voted = True
 
     # time.sleep(4)
     socket_Leader = context.socket(zmq.PAIR)
@@ -311,7 +301,7 @@ if __name__ == '__main__':
     global leader  # String value of who the leader is
     print("My name is: " + nodeName)
     print("My role is: " + role)
-    leader = None
+    leader = 's1'
     bucket = None
 
     ip_dict = {
@@ -324,7 +314,8 @@ if __name__ == '__main__':
         'c2':'10.142.0.8'
     }
     port_List = ["5000","5001","5002","5003","5004",
-            "5005","5006","5007","5008","5009",]
+            "5005","5006","5007","5008","5009","6000",
+                 "6001"]
     port_dict = {}
     if nodeName == "s1":
         bucket = "s1_bucket"
@@ -366,12 +357,14 @@ if __name__ == '__main__':
             's3': "5008",
             's4': "5009"
         }
-
-    #ip = ip_dict.get(nodeName)
-    # leader_ip = ip_dict.get('s1')
-    # leader_port = port_dict.get('s1')
-    # print("Leader Port: %s" % leader_port)
-    # print("Leader IP: %s " % leader_ip)
+    elif nodeName == 'c1':
+        port_dict = {
+            's1':"6000"
+        }
+    elif nodeName == 'c2':
+        port_dict = {
+            's1':"6001",
+        }
 
     time.sleep(3)
     print("Starting server thread...")
