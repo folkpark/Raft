@@ -139,7 +139,8 @@ def clientThread():
     ip = ip_dict.get('s1')
     context = zmq.Context()
     socket = context.socket(zmq.PAIR)
-    socket.connect("tcp://%s:%s" % (ip,port))
+    if nodeName != 's1':
+        socket.connect("tcp://%s:%s" % (ip,port))
 
     while True:
         # if leader == None:
