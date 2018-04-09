@@ -487,6 +487,6 @@ if __name__ == '__main__':
     clientThread = threading.Thread(target=clientThread)
     threads.append(clientThread)
     serverThread.start()
-    altserverThread.start()
+    altServerThread.start()
     clientThread.start()
     time.sleep(1) #wait one second for the connections to be made.
