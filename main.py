@@ -25,6 +25,8 @@ global port
 global nodeName #My nodename
 global role
 global leader
+global p1_state
+global p2_state
 # global leader_ip
 # global leader_port
 
@@ -54,6 +56,10 @@ def write_log_to_stable_storage(logEntry):
     #upload_to_cloud(bucket, "log.txt", "log.txt")
 
 def serverThread():
+    global beginSec
+    global endSec
+    global p1_state
+    global p2_state
     context = zmq.Context()
     socket1 = context.socket(zmq.PAIR)
     socket2 = context.socket(zmq.PAIR)
@@ -111,10 +117,9 @@ def serverThread():
 
             message = socket5.recv() #PLayer 1 sent command here
             pmessage = pickle.loads(message)
-            # print("Received: ", pmessage)
             action, location = pmessage.split("_")
 
-            if action == 'PUNCH':
+            if action == 'PUNCH' and p2_state== 'open':
                 rand = randomNum()
                 if rand == 10:
                     print("HIT HIT HIT")
@@ -127,14 +132,24 @@ def serverThread():
                     print("Player 1 punched MISSED player 2")
                     p = pickle.dumps("Miss!")
                     socket5.send(p)
+            elif action == 'PUNCH' and p2_state != 'open':
+                print("Punch blocked!!!")
+                p = pickle.dumps("Blocked!!!")
+                socket5.send(p)
+            elif action == 'BLOCK':
+                p1_state = "blocking"
+                mytime = datetime.datetime.now()
+                beginSec = mytime.second
+                endSec = beginSec+3
+                p = pickle.dumps("You are blocking")
+                socket5.send(p)
 
 
             message = socket6.recv() #Player two sent command here
             pmessage = pickle.loads(message)
-            # print("Received: ", pmessage)
             action, location = pmessage.split("_")
 
-            if action == 'PUNCH':
+            if action == 'PUNCH' and p1_state == 'open':
                 rand = randomNum()
                 if rand == 10:
                     print("HIT HIT HIT")
@@ -147,6 +162,17 @@ def serverThread():
                     print("Player 2 punch MISSED player 1")
                     p = pickle.dumps("Miss!")
                     socket6.send(p)
+            elif action == 'PUNCH' and p1_state != 'open':
+                print("Punch blocked!!!")
+                p = pickle.dumps("Blocked!!!")
+                socket6.send(p)
+            elif action == 'BLOCK':
+                p1_state = "blocking"
+                mytime = datetime.datetime.now()
+                beginSec = mytime.second
+                endSec = beginSec + 3
+                p = pickle.dumps("You are blocking")
+                socket6.send(p)
 
             # message = socket1.recv()
             # pmessage = pickle.loads(message)
@@ -165,6 +191,14 @@ def serverThread():
             # print("Received: ", pmessage)
 
             time.sleep(0.5)
+
+            #set the appropriate states for blocking
+            currentTime = datetime.datetime.now()
+            currentSec = currentTime.second
+            if p1_state != 'open' and currentSec >= endSec:
+                p1_state = "open"
+            if p2_state != 'open' and currentSec >= endSec:
+                p2_state = "open"
     print("-----Game over------")
 
 def clientThread():
@@ -372,6 +406,8 @@ def election():
 if __name__ == '__main__':
     nodeName = sys.argv[1]
     threads = []
+    p1_state = "open"
+    p2_state = "open"
     if nodeName == 's1':
         role = "Leader"
     else:
