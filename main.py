@@ -201,7 +201,8 @@ def clientThread():
             print("Your head was knocked off and you LOSE!!!")
             break
         time.sleep(1)
-    print("-----Game over------")
+    if role != 'Leader':
+        print("-----Game over------")
 
 def printMenu():
     print("############## FIGHT!!! ###########")
