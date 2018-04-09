@@ -187,6 +187,7 @@ def clientThread():
     if nodeName != 's1':
         socket.connect("tcp://%s:%s" % (ip,port))
 
+
     while True:
         # if leader == None:
         #     socket = election()
@@ -217,7 +218,7 @@ def clientThread():
         time.sleep(1)
 
 def printMenu():
-    print("FIGHT!!!")
+    print("############## FIGHT!!! ###########")
     print("Punch Left 1:")
     print("Punch Right 2:")
     print("Block Left 3:")
@@ -469,4 +470,4 @@ if __name__ == '__main__':
     serverThread.start()
     clientThread.start()
     time.sleep(1) #wait one second for the connections to be made.
-
+    print("-----Game over------")
