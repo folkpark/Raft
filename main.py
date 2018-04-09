@@ -178,6 +178,7 @@ def serverThread():
             elif result == 'HEADPOP':
                 print("Your head was knocked off and you LOSE!!!")
                 #End the game
+    print("-----Game over------")
 
 def clientThread():
     port = port_dict.get('s1')
@@ -216,6 +217,7 @@ def clientThread():
                 print("Your head was knocked off and you LOSE!!!")
                 break
         time.sleep(1)
+    print("-----Game over------")
 
 def printMenu():
     print("############## FIGHT!!! ###########")
@@ -470,4 +472,3 @@ if __name__ == '__main__':
     serverThread.start()
     clientThread.start()
     time.sleep(1) #wait one second for the connections to be made.
-    print("-----Game over------")
