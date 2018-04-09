@@ -176,33 +176,30 @@ def clientThread():
         socket.connect("tcp://%s:%s" % (ip,port))
 
 
-    while True:
-        # if leader == None:
-        #     socket = election()
-        if role != 'Leader':
-            action = printMenu()
-            if action == '1':
-                p = pickle.dumps("PUNCH_LEFT")
-            elif action == '2':
-                p = pickle.dumps("PUNCH_RIGHT")
-            elif action == '3':
-                p = pickle.dumps("BLOCK_LEFT")
-            elif action == '4':
-                p = pickle.dumps("BLOCK_RIGHT")
+    while role != 'Leader':
+        action = printMenu()
+        if action == '1':
+            p = pickle.dumps("PUNCH_LEFT")
+        elif action == '2':
+            p = pickle.dumps("PUNCH_RIGHT")
+        elif action == '3':
+            p = pickle.dumps("BLOCK_LEFT")
+        elif action == '4':
+            p = pickle.dumps("BLOCK_RIGHT")
 
-            print("sending to leader")
-            socket.send(p)
-            # if nodeName != 'c1' or nodeName != 'c2':
-            #     write_log_to_stable_storage(pmessage)
-            msg = socket.recv()
-            result = pickle.loads(msg)
-            # print("Received: ", pmessage)
-            if result == 'Winner':
-                print("You knocked off opponents head and WIN!!!")
-                break
-            elif result == 'HEADPOP':
-                print("Your head was knocked off and you LOSE!!!")
-                break
+        print("sending to leader")
+        socket.send(p)
+        # if nodeName != 'c1' or nodeName != 'c2':
+        #     write_log_to_stable_storage(pmessage)
+        msg = socket.recv()
+        result = pickle.loads(msg)
+        # print("Received: ", pmessage)
+        if result == 'Winner':
+            print("You knocked off opponents head and WIN!!!")
+            break
+        elif result == 'HEADPOP':
+            print("Your head was knocked off and you LOSE!!!")
+            break
         time.sleep(1)
     print("-----Game over------")
 
