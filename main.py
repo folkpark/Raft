@@ -93,51 +93,87 @@ def serverThread():
     elif nodeName == 'c2':
         socket1.bind("tcp://10.142.0.8:%s" % port_List[11])
     event = 1
-    while True:
-        # print("Inside Server Thread Loop")
-        event +=1
-        strEvent = str(event)
-        # toFollowerMsg = "Leader to follower: event %s" % (strEvent)
-        # p = pickle.dumps(toFollowerMsg)
-        # socket1.send(p)
-        # socket2.send(p)
-        # socket3.send(p)
-        # socket4.send(p)
-        # socket5.send(p)
-        # socket6.send(p)
-        #write_log_to_stable_storage(toFollowerMsg+"committed")
 
-        message = socket5.recv()
-        pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
-        action, location = pmessage.split("_")
-        print("Action: %s" % action )
-        print("Location: %s" % location)
-        # if action == 'PUNCH':
-        #
+    if nodeName != 'c1' and nodeName != 'c2':
+        while True:
+            # print("Inside Server Thread Loop")
+            event +=1
+            strEvent = str(event)
+            # toFollowerMsg = "Leader to follower: event %s" % (strEvent)
+            # p = pickle.dumps(toFollowerMsg)
+            # socket1.send(p)
+            # socket2.send(p)
+            # socket3.send(p)
+            # socket4.send(p)
+            # socket5.send(p)
+            # socket6.send(p)
+            #write_log_to_stable_storage(toFollowerMsg+"committed")
 
-        message = socket6.recv()
-        pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
+            message = socket5.recv() #PLayer 1 sent command here
+            pmessage = pickle.loads(message)
+            # print("Received: ", pmessage)
+            action, location = pmessage.split("_")
 
-        # message = socket1.recv()
-        # pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
-        #
-        # message = socket2.recv()
-        # pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
-        #
-        # message = socket3.recv()
-        # pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
-        #
-        # message = socket4.recv()
-        # pmessage = pickle.loads(message)
-        # print("Received: ", pmessage)
+            if action == 'PUNCH':
+                rand = randomNum()
+                if rand == 10:
+                    print("HIT HIT HIT")
+                    p = pickle.dumps("HEADPOP")
+                    socket6.send(p)
+                    p = pickle.dumps("Winner")
+                    socket5.send(p)
+                else:
+                    print("Player 1 punched MISSED player 2")
+                    p = pickle.dumps("Miss!")
+                    socket6.send(p)
 
-        time.sleep(1)
 
+            message = socket6.recv() #Player two sent command here
+            pmessage = pickle.loads(message)
+            # print("Received: ", pmessage)
+            action, location = pmessage.split("_")
+
+            if action == 'PUNCH':
+                rand = randomNum()
+                if rand == 10:
+                    print("HIT HIT HIT")
+                    p = pickle.dumps("HEADPOP")
+                    socket5.send(p)
+                    p = pickle.dumps("Winner")
+                    socket6.send(p)
+                else:
+                    print("Player 2 punched MISSED player 1")
+                    p = pickle.dumps("Miss!")
+                    socket6.send(p)
+
+            # message = socket1.recv()
+            # pmessage = pickle.loads(message)
+            # print("Received: ", pmessage)
+            #
+            # message = socket2.recv()
+            # pmessage = pickle.loads(message)
+            # print("Received: ", pmessage)
+            #
+            # message = socket3.recv()
+            # pmessage = pickle.loads(message)
+            # print("Received: ", pmessage)
+            #
+            # message = socket4.recv()
+            # pmessage = pickle.loads(message)
+            # print("Received: ", pmessage)
+
+            time.sleep(0.5)
+    else:
+        while True:
+            message = socket1.recv()  # PLayer 1 sent command here
+            result = pickle.loads(message)
+            # print("Received: ", pmessage)
+            if result == 'Winner':
+                print("You knocked off opponents head and WIN!!!")
+                #End the game
+            elif result == 'HEADPOP':
+                print("Your head was knocked off and you LOSE!!!")
+                #End the game
 
 def clientThread():
     port = port_dict.get('s1')
