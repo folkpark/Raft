@@ -198,14 +198,14 @@ def clientThread():
                 p = pickle.dumps("BLOCK_LEFT")
             elif action == '4':
                 p = pickle.dumps("BLOCK_RIGHT")
-            msg = socket.recv()
-            pmessage = pickle.loads(msg)
-            print(pmessage)
-            # if nodeName != 'c1' or nodeName != 'c2':
-            #     write_log_to_stable_storage(pmessage)
 
             print("sending to leader")
             socket.send(p)
+            # if nodeName != 'c1' or nodeName != 'c2':
+            #     write_log_to_stable_storage(pmessage)
+            msg = socket.recv()
+            pmessage = pickle.loads(msg)
+            print(pmessage)
         time.sleep(1)
 
 def printMenu():
