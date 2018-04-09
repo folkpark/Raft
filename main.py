@@ -129,24 +129,24 @@ def serverThread():
                     socket5.send(p)
 
 
-            message = socket6.recv() #Player two sent command here
-            pmessage = pickle.loads(message)
-            # print("Received: ", pmessage)
-            action, location = pmessage.split("_")
-
-            if action == 'PUNCH':
-                rand = randomNum()
-                if rand == 10:
-                    print("HIT HIT HIT")
-                    p = pickle.dumps("HEADPOP")
-                    socket5.send(p)
-                    p = pickle.dumps("Winner")
-                    socket6.send(p)
-                    break
-                else:
-                    print("Player 2 punch MISSED player 1")
-                    p = pickle.dumps("Miss!")
-                    socket6.send(p)
+            # message = socket6.recv() #Player two sent command here
+            # pmessage = pickle.loads(message)
+            # # print("Received: ", pmessage)
+            # action, location = pmessage.split("_")
+            #
+            # if action == 'PUNCH':
+            #     rand = randomNum()
+            #     if rand == 10:
+            #         print("HIT HIT HIT")
+            #         p = pickle.dumps("HEADPOP")
+            #         socket5.send(p)
+            #         p = pickle.dumps("Winner")
+            #         socket6.send(p)
+            #         break
+            #     else:
+            #         print("Player 2 punch MISSED player 1")
+            #         p = pickle.dumps("Miss!")
+            #         socket6.send(p)
 
             # message = socket1.recv()
             # pmessage = pickle.loads(message)
@@ -165,20 +165,35 @@ def serverThread():
             # print("Received: ", pmessage)
 
             time.sleep(0.5)
-    else:
-        while True:
-            print("This is the players server thread!!")
-            message = socket1.recv()  # PLayer 1 sent command here
-            print("message received!")
-            result = pickle.loads(message)
-            # print("Received: ", pmessage)
-            if result == 'Winner':
-                print("You knocked off opponents head and WIN!!!")
-                #End the game
-            elif result == 'HEADPOP':
-                print("Your head was knocked off and you LOSE!!!")
-                #End the game
     print("-----Game over------")
+
+def altServerThread():
+    context = zmq.Context()
+    socket1 = context.socket(zmq.PAIR)
+    socket2 = context.socket(zmq.PAIR)
+    socket1.bind("tcp://10.142.0.2:%s" % port_List[10])
+    socket2.bind("tcp://10.142.0.7:%s" % port_List[11])
+
+    if nodeName == 'Leader':
+        while True:
+            msg = socket2.recv() #PLayer 2 sent command here
+            pmessage = pickle.loads(msg)
+            action, location = pmessage.split("_")
+
+            if action == 'PUNCH':
+                rand = randomNum()
+                if rand == 10:
+                    print("HIT HIT HIT")
+                    p = pickle.dumps("HEADPOP")
+                    socket1.send(p)
+                    p = pickle.dumps("Winner")
+                    socket2.send(p)
+                    break
+                else:
+                    print("Player 2 punch MISSED player 1")
+                    p = pickle.dumps("Miss!")
+                    socket2.send(p)
+        print("-----Game over------")
 
 def clientThread():
     port = port_dict.get('s1')
@@ -467,8 +482,11 @@ if __name__ == '__main__':
     print("Starting server thread...")
     serverThread = threading.Thread(target=serverThread)
     threads.append(serverThread)
+    altServerThread = threading.Thread(target=altServerThread)
+    threads.append(altServerThread)
     clientThread = threading.Thread(target=clientThread)
     threads.append(clientThread)
     serverThread.start()
+    altserverThread.start()
     clientThread.start()
     time.sleep(1) #wait one second for the connections to be made.
