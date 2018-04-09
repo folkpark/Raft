@@ -165,7 +165,9 @@ def serverThread():
             time.sleep(0.5)
     else:
         while True:
+            print("This is the players server thread!!")
             message = socket1.recv()  # PLayer 1 sent command here
+            print("message received!")
             result = pickle.loads(message)
             # print("Received: ", pmessage)
             if result == 'Winner':
