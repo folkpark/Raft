@@ -122,6 +122,7 @@ def serverThread():
                     socket6.send(p)
                     p = pickle.dumps("Winner")
                     socket5.send(p)
+                    break
                 else:
                     print("Player 1 punched MISSED player 2")
                     p = pickle.dumps("Miss!")
@@ -204,8 +205,14 @@ def clientThread():
             # if nodeName != 'c1' or nodeName != 'c2':
             #     write_log_to_stable_storage(pmessage)
             msg = socket.recv()
-            pmessage = pickle.loads(msg)
-            print(pmessage)
+            result = pickle.loads(msg)
+            # print("Received: ", pmessage)
+            if result == 'Winner':
+                print("You knocked off opponents head and WIN!!!")
+                break
+            elif result == 'HEADPOP':
+                print("Your head was knocked off and you LOSE!!!")
+                break
         time.sleep(1)
 
 def printMenu():
