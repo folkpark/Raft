@@ -126,7 +126,7 @@ def serverThread():
                 else:
                     print("Player 1 punched MISSED player 2")
                     p = pickle.dumps("Miss!")
-                    socket6.send(p)
+                    socket5.send(p)
 
 
             message = socket6.recv() #Player two sent command here
@@ -142,8 +142,9 @@ def serverThread():
                     socket5.send(p)
                     p = pickle.dumps("Winner")
                     socket6.send(p)
+                    break
                 else:
-                    print("Player 2 punched MISSED player 1")
+                    print("Player 2 punch MISSED player 1")
                     p = pickle.dumps("Miss!")
                     socket6.send(p)
 
