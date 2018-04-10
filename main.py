@@ -126,6 +126,8 @@ def serverThread():
                     p = pickle.dumps("HEADPOP")
                     socket6.send(p)
                     p = pickle.dumps("Winner")
+                    currentTime = datetime.datetime.now()
+                    write_log_to_stable_storage("Player 1 punch HIT AND WINS:%s" % currentTime)
                     socket5.send(p)
                     break
                 else:
@@ -161,6 +163,8 @@ def serverThread():
                     p = pickle.dumps("HEADPOP")
                     socket5.send(p)
                     p = pickle.dumps("Winner")
+                    currentTime = datetime.datetime.now()
+                    write_log_to_stable_storage("Player 2 punch HIT AND WINS:%s" % currentTime)
                     socket6.send(p)
                     break
                 else:
