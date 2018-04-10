@@ -130,18 +130,23 @@ def serverThread():
                     break
                 else:
                     print("Player 1 punched MISSED player 2")
+                    currentTime = datetime.datetime.now()
+                    write_log_to_stable_storage("Player 1 punched MISSED player 2:%s"%currentTime)
                     p = pickle.dumps("Miss!")
                     socket5.send(p)
             elif action == 'PUNCH' and p2_state != 'open':
                 print("Punch blocked!!!")
+                currentTime = datetime.datetime.now()
+                write_log_to_stable_storage("Player 1 punched BLOCKED by player 2:%s" % currentTime)
                 p = pickle.dumps("Blocked!!!")
                 socket5.send(p)
             elif action == 'BLOCK':
                 p1_state = "blocking"
-                mytime = datetime.datetime.now()
-                beginSec = mytime.second
+                currentTime = datetime.datetime.now()
+                beginSec = currentTime.second
                 endSec = beginSec+3
                 p = pickle.dumps("You are blocking")
+                write_log_to_stable_storage("Player 1 BLOCKING:%s" % currentTime)
                 socket5.send(p)
 
 
@@ -160,18 +165,23 @@ def serverThread():
                     break
                 else:
                     print("Player 2 punch MISSED player 1")
+                    currentTime = datetime.datetime.now()
+                    write_log_to_stable_storage("Player 2 punch MISSED:%s" % currentTime)
                     p = pickle.dumps("Miss!")
                     socket6.send(p)
             elif action == 'PUNCH' and p1_state != 'open':
                 print("Punch blocked!!!")
+                currentTime = datetime.datetime.now()
+                write_log_to_stable_storage("Player 2 punch BLOCKED by Player 1:%s" % currentTime)
                 p = pickle.dumps("Blocked!!!")
                 socket6.send(p)
             elif action == 'BLOCK':
                 p1_state = "blocking"
-                mytime = datetime.datetime.now()
-                beginSec = mytime.second
+                currentTime = datetime.datetime.now()
+                beginSec = currentTime.second
                 endSec = beginSec + 3
                 p = pickle.dumps("You are blocking")
+                write_log_to_stable_storage("Player 2 BLOCKING:%s" % currentTime)
                 socket6.send(p)
 
             # message = socket1.recv()
